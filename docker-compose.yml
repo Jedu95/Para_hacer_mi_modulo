@@ -1,20 +1,20 @@
 services:
   db:
     image: postgres:14
-    container_name: db14
+    container_name: db14_examen
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: postgres
     restart: always       # se inicia como servicio
     volumes:
-      - db14-data:/var/lib/postgresql/data
+      - db14_examen-data:/var/lib/postgresql/data
     networks:
-      - odoo-net
+      - odoo-net_examen
 
   odoo16: 
     image: odoo:16
-    container_name: odoo16
+    container_name: odoo16_examen
     depends_on:
       - db    #el nombre del servicio. Odoo espera a que se inicie
     environment:
@@ -22,21 +22,21 @@ services:
       USER: admin
       PASSWORD: admin
     ports:
-      - "8069:8069"    # puerto del HOST: puerto del contenedor
+      - "8089:8069"    # puerto del HOST: puerto del contenedor
     volumes:
-      - odoo16-data:/var/lib/odoo       #mapeo en el directorio de datos de odoo del contenedor
-      - ./config_odoo:/etc/odoo          #mapeo en el directorio
-      - ./custom-addons:/mnt/extra-addons #mapeo en el directorio
+      - odoo16_examen-data:/var/lib/odoo       #mapeo en el directorio de datos de odoo del contenedor. Para tener PERSISTENCIA
+      - ./config_odoo:/etc/odoo          #mapeo en el directorio de configuración del contenedor
+      - ./custom-addons:/mnt/extra-addons #mapeo en el directorio local para personalizaciones
       - ./logs:/var/log/odoo            #mapeo de los log de odoo
     networks:
-      - odoo-net
+      - odoo-net_examen
 
 volumes:
-  db14-data:
-  odoo16-data:
+  db14_examen-data:
+  odoo16_examen-data:
 
 networks:
-  odoo-net:
+  odoo-net_examen:
 
 
 
